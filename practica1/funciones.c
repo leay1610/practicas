@@ -46,3 +46,16 @@ void invertirArreglo(int *arr, int size) {
         fin--;
     }
 }
+// cuentaPares: cuenta la cantidad de numeros pares en un arreglo.
+// parametros:
+//   - int *arr: puntero al arreglo
+//   - int size: tamano del arreglo
+// retorno: int con la cantidad de pares (0 si arr es NULL o size <= 0)
+int cuentaPares(int *arr, int size) {
+    if (arr == NULL || size <= 0) return 0;
+    int contador = 0;
+    for (int i = 0; i < size; i++) {
+        if (*(arr + i) % 2 == 0) contador++;
+    }
+    return contador;
+}
