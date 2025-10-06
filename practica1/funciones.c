@@ -30,3 +30,19 @@ int longitudCadena(char *cadena) {
     }
     return contador;
 }
+// invertirArreglo: invierte un arreglo de enteros in-place usando apuntadores.
+// parametros:
+//   - int *arr: puntero al primer elemento del arreglo
+//   - int size: tamano del arreglo
+void invertirArreglo(int *arr, int size) {
+    if (arr == NULL || size <= 0) return;
+    int *inicio = arr;
+    int *fin = arr + size - 1;
+    while (inicio < fin) {
+        int temp = *inicio;
+        *inicio = *fin;
+        *fin = temp;
+        inicio++;
+        fin--;
+    }
+}
