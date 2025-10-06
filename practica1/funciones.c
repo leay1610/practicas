@@ -17,3 +17,16 @@ void swap(int *a, int *b) {
     *a = *b;
     *b = temp;
 }
+// longitudCadena: retorna la longitud de la cadena sin usar strlen.
+// parametros:
+//   - char *cadena: puntero a la cadena terminada en '\\0'
+// retorno: int con la longitud (0 si cadena es NULL)
+int longitudCadena(char *cadena) {
+    if (cadena == NULL) return 0;
+    int contador = 0;
+    while (*cadena != '\0') {
+        contador++;
+        cadena++;
+    }
+    return contador;
+}
