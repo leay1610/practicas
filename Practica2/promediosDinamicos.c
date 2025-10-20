@@ -5,9 +5,9 @@ void main() {
     printf("=== Calculadora de Promedio Dinámica ===\n\n");
     int opcion = 0;
 
-    // variables dinámicas
+    // Variables para memoria dinámica
     double *calificaciones = NULL;
-    int total = 0; // cantidad total de calificaciones guardadas
+    int total = 0; // total de calificaciones almacenadas
 
     while (opcion != 2) {
         printf("1) Ingresar calificaciones\n");
@@ -21,39 +21,39 @@ void main() {
             printf("\n¿Cuántas calificaciones desea ingresar? ");
             scanf("%d", &n);
 
-            // Reservar o ampliar memoria
+            // Asignar o ampliar memoria dinámicamente
             if (total == 0) {
-                calificaciones = (double *)malloc(n, *sizeof(double));
+                calificaciones = (double *)malloc(n * sizeof(double));
                 if (calificaciones == NULL) {
-                    printf("No se pudo asignar memoria.\n");
+                    printf("Error: no se pudo asignar memoria.\n");
                     return;
                 }
             } else {
                 double *tmp = (double *)realloc(calificaciones, (total + n) * sizeof(double));
                 if (tmp == NULL) {
-                    printf("Error al reasignar memoria.\n");
+                    printf("Error: no se pudo reasignar memoria.\n");
                     free(calificaciones);
                     return;
                 }
                 calificaciones = tmp;
             }
 
-            // Ingresar calificaciones
+            // Ingresar calificaciones con aritmética de punteros
             for (int i = 0; i < n; i++) {
                 printf("Ingrese la calificación %d: ", total + i + 1);
-                scanf("%lf", (calificaciones+ total + i));
+                scanf("%lf", (calificaciones + total + i)); // sin corchetes
             }
 
             total += n;
 
-            // Calcular promedio
+            // Calcular el promedio con apuntadores
             double suma = 0;
-            double *ptr=calificaciones;
+            double *ptr = calificaciones; // apuntador auxiliar
             for (int i = 0; i < total; i++) {
-                suma += *(ptr + i);
+                suma += *(ptr + i); // accedemos con * (sin [])
             }
-            double promedio = suma / total;
 
+            double promedio = suma / total;
             printf("\nPromedio actual: %.2f\n", promedio);
             if (promedio >= 7)
                 printf("Estado: APROBADO\n");
@@ -77,4 +77,5 @@ void main() {
             printf("\n=== Opcion invalida === \nPor favor seleccione una opcion del menu:\n");
         }
     }
-}
+    
+    }
