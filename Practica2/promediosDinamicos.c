@@ -23,7 +23,7 @@ void main() {
 
             // Reservar o ampliar memoria
             if (total == 0) {
-                calificaciones = (double *)malloc(n, sizeof(double));
+                calificaciones = (double *)malloc(n, *sizeof(double));
                 if (calificaciones == NULL) {
                     printf("No se pudo asignar memoria.\n");
                     return;
