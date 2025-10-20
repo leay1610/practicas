@@ -23,7 +23,7 @@ void main() {
 
             // Reservar o ampliar memoria
             if (total == 0) {
-                calificaciones = (double *)calloc(n, sizeof(double));
+                calificaciones = (double *)malloc(n, sizeof(double));
                 if (calificaciones == NULL) {
                     printf("No se pudo asignar memoria.\n");
                     return;
@@ -41,15 +41,16 @@ void main() {
             // Ingresar calificaciones
             for (int i = 0; i < n; i++) {
                 printf("Ingrese la calificación %d: ", total + i + 1);
-                scanf("%lf", &calificaciones[total + i]);
+                scanf("%lf", (calificaciones+ total + i));
             }
 
             total += n;
 
             // Calcular promedio
             double suma = 0;
+            double *ptr=calificaciones;
             for (int i = 0; i < total; i++) {
-                suma += calificaciones[i];
+                suma += *(ptr + i);
             }
             double promedio = suma / total;
 
