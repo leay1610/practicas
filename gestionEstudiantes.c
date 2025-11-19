@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-
-#define N 4  // número de estudiantes (según instrucciones: arreglo de 4 estructuras)
 
 typedef struct {
     char nombre[50];
@@ -10,96 +7,129 @@ typedef struct {
     double promedio;
 } Estudiante;
 
-/* Prototipos */
+// AGREGAR: Prototipos de funciones
 void capturarEstudiante(Estudiante *est);
 void calcularPromedio(Estudiante *est);
 void mostrarEstudiante(Estudiante est);
 
-int main() {
-    Estudiante grupo[N];
+double promedioGrupal(Estudiante grupo[], int tam); 
+void estudiantesMayores8(Estudiante grupo[], int tam);
+int buscarPorMatricula(Estudiante grupo[], int tam, int matricula); 
 
+int main(){
+    Estudiante grupo[4];
+    
     printf("=== SISTEMA DE GESTIÓN ACADÉMICA ===\n");
-
-    // Capturar datos de N estudiantes
-    for (int i = 0; i < N; i++) {
-        printf("\nEstudiante %d:\n", i + 1);
+    
+    //Capturar datos de 4 estudiantes
+    for(int i = 0; i < 4; i++) {
+        printf("\nEstudiante %d:\n", i+1);
         capturarEstudiante(&grupo[i]);
     }
-
+    
     // Mostrar todos los estudiantes
     printf("\n=== LISTA COMPLETA DE ESTUDIANTES ===\n");
-    for (int i = 0; i < N; i++) {
+    //Mostrar información de todos los estudiantes
+    for(int i = 0; i < 4; i++) {
         mostrarEstudiante(grupo[i]);
     }
+    double promGral = promedioGrupal(grupo, 4);
+    printf("\n=== PROMEDIO GENERAL DEL GRUPO ===\n");
+    printf("El promedio general del grupo es: %.2f\n", promGral);
+    
+    printf("\n=== ESTUDIANTES CON PROMEDIO MAYOR A 8.0 ===\n");
+    estudiantesMayores8(grupo, 4);
 
-    // Encontrar el mejor promedio
+    int matBusqueda;
+    printf("\n=== BÚSQUEDA DE ESTUDIANTE POR MATRÍCULA ===\n");
+    printf("Ingrese la matrícula a buscar: ");
+    scanf("%d", &matBusqueda);
+    int indice = buscarPorMatricula(grupo, 4, matBusqueda);
+
+    if (indice != -1) {
+        printf("Estudiante encontrado en el índice: %d\n", indice);
+        mostrarEstudiante(grupo[indice]);
+    } else {
+        printf("Estudiante no encontrado. El valor devuelto es: %d\n", indice);
+    }
+
+    //mejor promedio
     int mejorIndex = 0;
-    for (int i = 1; i < N; i++) {
-        if (grupo[i].promedio > grupo[mejorIndex].promedio) {
+    for(int i = 1; i < 4; i++) {
+        if(grupo[i].promedio > grupo[mejorIndex].promedio) {
             mejorIndex = i;
         }
     }
-
+    
     printf("\n=== ESTUDIANTE CON MEJOR PROMEDIO ===\n");
     printf("Nombre: %s\n", grupo[mejorIndex].nombre);
-    printf("Matrícula: %d\n", grupo[mejorIndex].matricula);
     printf("Promedio: %.2f\n", grupo[mejorIndex].promedio);
-
+    
     return 0;
 }
 
+// Funciones de captura, cálculo y muestra
 void capturarEstudiante(Estudiante *est) {
-    // Limpiar el buffer de entrada antes de usar fgets si viene de un scanf anterior
-    // (En este programa, usamos scanf para números; por seguridad, dejamos aquí)
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) { }
-
     printf("Ingrese nombre: ");
-    if (fgets(est->nombre, sizeof(est->nombre), stdin) != NULL) {
-        // quitar '\n' final si existe
-        size_t len = strlen(est->nombre);
-        if (len > 0 && est->nombre[len - 1] == '\n') {
-            est->nombre[len - 1] = '\0';
-        }
-    } else {
-        // si falla fgets, dejar nombre vacío
-        est->nombre[0] = '\0';
-    }
-
+    scanf("%s", est->nombre);
+    
     printf("Ingrese matrícula: ");
-    while (scanf("%d", &est->matricula) != 1) {
-        // manejo simple de error: limpiar entrada y pedir de nuevo
-        printf("Entrada inválida. Ingrese matrícula (número entero): ");
-        while ((c = getchar()) != '\n' && c != EOF) { }
+    scanf("%d", &est->matricula);
+    
+    for(int i = 0; i < 4; i++) {
+        printf("Ingrese calificación %d: ", i+1);
+        scanf("%lf", &est->calificaciones[i]);
     }
-
-    // Capturar 4 calificaciones (double)
-    for (int i = 0; i < 4; i++) {
-        printf("Ingrese calificación %d: ", i + 1);
-        while (scanf("%lf", &est->calificaciones[i]) != 1) {
-            printf("Entrada inválida. Ingrese una calificación (número): ");
-            while ((c = getchar()) != '\n' && c != EOF) { }
-        }
-    }
-
-    // Calcular y guardar promedio
+    
     calcularPromedio(est);
 }
 
 void calcularPromedio(Estudiante *est) {
-    double suma = 0.0;
-    for (int i = 0; i < 4; i++) {
+    double suma = 0;
+    for(int i = 0; i < 4; i++) {
         suma += est->calificaciones[i];
     }
-    est->promedio = suma / 4.0;
+    est->promedio = suma / 4;
 }
 
 void mostrarEstudiante(Estudiante est) {
     printf("\n--- Información del Estudiante ---\n");
     printf("Nombre: %s\n", est.nombre);
     printf("Matrícula: %d\n", est.matricula);
-    for (int i = 0; i < 4; i++) {
-        printf("Calificación %d: %.2f\n", i + 1, est.calificaciones[i]);
+    printf("Calificaciones: ");
+    for(int i = 0; i < 4; i++) {
+        printf("%.2f ", est.calificaciones[i]);
     }
-    printf("Promedio: %.2f\n", est.promedio);
+    printf("\nPromedio: %.2f\n", est.promedio);
+}
+double promedioGrupal(Estudiante grupo[], int tam) {
+    double sumaTotal = 0.0;
+    for (int i = 0; i < tam; i++) {
+        sumaTotal += grupo[i].promedio;
+    }
+    if (tam > 0) {
+        return sumaTotal / tam;
+    } else {
+        return 0.0;
+    }
+}
+void estudiantesMayores8(Estudiante grupo[], int tam) {
+    int cont = 0;
+    for (int i = 0; i < tam; i++) {
+        if (grupo[i].promedio > 8.0) {
+            mostrarEstudiante(grupo[i]);
+            cont++;
+        }
+    }
+    if (cont == 0) {
+        printf("No hay estudiantes con promedio mayor a 8.0.\n");
+    }
+}
+int buscarPorMatricula(Estudiante grupo[], int tam, int matricula) {
+    for (int i = 0; i < tam; i++) {
+        if (grupo[i].matricula == matricula) {
+            return i; // Regresa el índice del arreglo
+        }
+    }
+    return -1; // Regresa -1 si no se encuentra
 }
